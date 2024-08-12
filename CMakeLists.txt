@@ -12,4 +12,3 @@ add_executable(${PROJECT_NAME} ${SOURCES_FILES})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ali_common demura)
 
-
