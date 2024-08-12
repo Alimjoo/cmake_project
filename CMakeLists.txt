@@ -11,3 +11,5 @@ file(GLOB SOURCES_FILES "src/*.h" "src/*.cpp")
 add_executable(${PROJECT_NAME} ${SOURCES_FILES})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ali_common demura)
+
+
