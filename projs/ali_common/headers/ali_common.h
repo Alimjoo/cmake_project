@@ -1,11 +1,16 @@
 #ifndef ALI_COMMON_HEADER
 #define ALI_COMMON_HEADER
+#define _USE_MATH_DEFINES
 #include <iostream>
 #include <ctime>
 #include <cmath>
 #include <string>
 #include <vector>
+#ifdef _WIN32
+#include <opencv2/opencv.hpp>
+#else
 #include <opencv4/opencv2/opencv.hpp>
+#endif
 
 #pragma region Usings
 using std::cout;

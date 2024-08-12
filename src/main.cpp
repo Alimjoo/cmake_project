@@ -2,7 +2,12 @@
 
 
 int main(){
-    Mat image = cv::imread("/home/pi/Desktop/CMake/project_cmake/assets/b64.png", 0);
+#ifdef _WIN32
+    string path = "C:/Users/PI/Desktop/project_cmake/assets/";
+#else
+    string path = "/home/pi/Desktop/CMake/project_cmake/assets/"
+#endif
+     Mat image = cv::imread(path + "b64.png", 0);
     int rows = image.rows, cols = image.cols;
     demura_param para;
     para.height = 2532;
