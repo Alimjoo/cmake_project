@@ -54,9 +54,13 @@ int begin_demura(uchar* img, int rows, int cols, demura_param para) {
     ali_draw_dots(test_white.ptr(), rows, cols, white_dots, 255);
 
     cv::RotatedRect min_rect_area = cv::minAreaRect(white_dots);
+    vector<cv::Point2f> min_rect_cv(4);
+    min_rect_area.points(min_rect_cv.data());
+    ali_draw_countor(shemm, min_rect_cv, 255);
     vector<ALIPointF> min_rect(4);
-    min_rect_area.points(min_rect.data());
-    // ali_draw_countor(shemm, min_rect, 255);
+    for (int i = 0; i < 4; i++){
+        min_rect[i] = ALIPointF(min_rect_cv[i]);
+    }
 
     bool base_res = get_demura_base_based_on_angle(min_rect, ali_degree2radias(para.placed_angle));
     if (!base_res){ 
@@ -66,11 +70,11 @@ int begin_demura(uchar* img, int rows, int cols, demura_param para) {
 
     ali_draw_line(shemm, min_rect[0], min_rect[1], 255);
     ali_draw_line(shemm, min_rect[1], min_rect[2], 255);
-    cv::circle(shemm, min_rect[0], 20, 255, -1);
-    cv::circle(shemm, min_rect[2], 20, 255, -1);
+    cv::circle(shemm, min_rect[0].round(), 20, 255, -1);
+    cv::circle(shemm, min_rect[2].round(), 20, 255, -1);
 
     ALIPointF center = (min_rect[0] + min_rect[2]) / 2.0;
-    cv::circle(shemm, center, 20, 255, -1);
+    cv::circle(shemm, center.round(), 20, 255, -1);
 
     
     ALILineF line_x(min_rect[1], min_rect[2]), line_y(min_rect[1], min_rect[0]);

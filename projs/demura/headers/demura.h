@@ -1,5 +1,6 @@
 #ifndef ALI_DEMURA_HEADER
 #define ALI_DEMURA_HEADER
+#define ALI_DEBUG_DEV_DEMURA true
 
 #include "ali_common.h"
 

@@ -31,76 +31,132 @@ using cv::Mat;
 #pragma region Templates
 class ALIPointF;
 class ALIPoint;
-class ALIPoint : public cv::Point {
+class ALILine;
+class ALILineF;
+// int point 
+class ALIPoint {
+public:
+    int x = 0, y = 0;
 public:
     ALIPoint();
     ~ALIPoint();
-    ALIPoint(int x, int y);
-    ALIPoint(float xx, float yy);
-    ALIPoint(double xx, double yy);
-    ALIPoint(const ALIPointF& pointF);
-    ALIPoint round() const;
-    ALIPoint operator+(const ALIPoint& other) const;
-    ALIPoint operator+(const ALIPointF& other) const;
-    ALIPoint operator-(const ALIPoint& other) const;
-    ALIPoint operator-(const ALIPointF& other) const;
-    ALIPoint operator/(int scalar) const;
-    ALIPoint operator/(float scalar) const;
-    ALIPoint operator/(double scalar) const;
-    ALIPoint operator*(int scalar) const;
-    ALIPoint operator*(float scalar) const;
-    ALIPoint operator*(double scalar) const;
-    bool operator==(const ALIPoint& other);
-    bool operator==(const ALIPointF& other);
+    template<typename T>
+    ALIPoint(T xx, T yy) { x = int(std::round(xx)), y = int(std::round(yy)); }
+    template<typename T>
+    ALIPoint(const T& p) { x = int(std::round(p.x)), y = int(std::round(p.y)); }
+public:
+    ALIPoint round();
+    float norm();
+    // template<typename T>
+    // operator T() { return T(x, y); }
+    template<typename T>
+    ALIPoint operator+(const T& other)const { return ALIPoint((this->x + other.x), (this->y + other.y)); }
+    template<typename T>
+    ALIPoint operator-(const T& other)const { return ALIPoint((this->x - other.x), (this->y - other.y)); }
+    template<typename T>
+    ALIPoint operator*(const T& scalar)const { return ALIPoint((this->x * scalar), (this->y * scalar)); }
+    template<typename T>
+    ALIPoint operator/(const T& scalar)const { return ALIPoint((this->x * 1.0 / scalar), (this->y * 1.0 / scalar)); }
+    template<typename T>
+    bool operator<(const T& other)const { if (x < other.x && y < other.y) return true; else return false; }
+    template<typename T>
+    bool operator<=(const T& other)const { if (x <= other.x && y <= other.y) return true; else return false; }
+    template<typename T>
+    bool operator>(const T& other)const { if (x > other.x && y > other.y) return true; else return false; }
+    template<typename T>
+    bool operator>=(const T& other)const { if (x >= other.x && y >= other.y) return true; else return false; }
+    template<typename T>
+    bool operator==(const T& p)const { if (x == int(std::round(p.x)) && y == int(std::round(p.y))) return true; else return false; }
+    operator cv::Point()  { return cv::Point(x, y) ;};
 };
-class ALIPointF : public cv::Point2f {
+// float point
+class ALIPointF {
+public:
+    float x = 0, y = 0;
 public:
     ALIPointF();
     ~ALIPointF();
-    ALIPointF(int x, int y);
-    ALIPointF(float x, float y);
-    ALIPointF(double xx, double yy);   
-    ALIPointF(const ALIPoint& point);
-    ALIPoint round() const;
-    ALIPointF operator+(const ALIPointF& other) const;
-    ALIPointF operator+(const ALIPoint& other) const;
-    ALIPointF operator-(const ALIPointF& other) const;
-    ALIPointF operator-(const ALIPoint& other) const;
-    ALIPointF operator/(int scalar) const;
-    ALIPointF operator/(float scalar) const;
-    ALIPointF operator/(double scalar) const;
-    ALIPointF operator*(int scalar) const;
-    ALIPointF operator*(float scalar) const;
-    ALIPointF operator*(double scalar) const;
-    bool operator==(const ALIPointF& other);
-    bool operator==(const ALIPoint& other);
+    template<typename T>
+    ALIPointF(T xx, T yy) { x = float(xx), y = float(yy); }
+    template<typename T>
+    ALIPointF(const T& p) { x = float(p.x), y = float(p.y); }
+public:
+    ALIPoint round();
+    float norm();
+    // template<typename T>
+    // operator T() { return T(x, y); }
+    template<typename T>
+    ALIPointF operator+(const T& other)const { return ALIPointF(float(this->x + other.x), float(this->y + other.y)); }
+    template<typename T>
+    ALIPointF operator-(const T& other)const { return ALIPointF(float(this->x - other.x), float(this->y - other.y)); }
+    template<typename T>
+    ALIPointF operator*(const T& scalar)const { return ALIPointF(float(this->x * scalar), float(this->y * scalar)); }
+    template<typename T>
+    ALIPointF operator/(const T& scalar)const { return ALIPointF(float(this->x / scalar), float(this->y / scalar)); }
+    template<typename T>
+    bool operator<(const T& other)const { if (x < other.x && y < other.y) return true; else return false; }
+    template<typename T>
+    bool operator<=(const T& other)const { if (x <= other.x && y <= other.y) return true; else return false; }
+    template<typename T>
+    bool operator>(const T& other)const { if (x > other.x && y > other.y) return true; else return false; }
+    template<typename T>
+    bool operator>=(const T& other)const { if (x >= other.x && y >= other.y) return true; else return false; }
+    operator cv::Point2f()  { return cv::Point2f(x, y) ;};
 };
-class ALILine;
-class ALILineF;
+// int line
 class ALILine {
 public:
     ALIPoint p0, p1;
 public:
-    float length() const;
-    ALIPointF get_normal_vec() const;
+    float length();
+    ALIPointF get_normal_vec();
 public:
     ALILine();
-    ALILine(ALIPoint p0, ALIPoint p1);
-    ALILine(const ALILineF& linef);
     ~ALILine();
+    // template<typename T>
+    // operator T() { return T(p0, p1); }
+    template <typename T>
+    ALILine(const T& pp0, const T& pp1) { p0 = ALIPoint(pp0), p1 = ALIPoint(pp1); }
+    template <typename T>
+    ALILine(T x0, T y0, T x1, T y1) { p0 = ALIPoint(x0, y0), p1 = ALIPoint(x1, y1); }
+    // template <typename T>
+    // ALILine(const T& line) { p0 = ALIPoint(line.p0), p1 = ALIPoint(line.p1); };
 };
+// float line
 class ALILineF {
 public:
     ALIPointF p0, p1;
 public:
-    float length() const;
-    ALIPointF get_normal_vec() const;
+    float length();
+    ALIPointF get_normal_vec();
 public:
     ALILineF();
-    ALILineF(ALIPointF p0, ALIPointF p1);
-    ALILineF(const ALILine& linef);
     ~ALILineF();
+    // template<typename T>
+    // operator T() { return T(p0, p1); }
+    template <typename T>
+    ALILineF(const T& pp0, const T& pp1) { p0 = ALIPointF(pp0), p1 = ALIPointF(pp1); }
+    template <typename T>
+    ALILineF(T x0, T y0, T x1, T y1) { p0 = ALIPointF(x0, y0), p1 = ALIPointF(x1, y1); }
+    // template <typename T>
+    // ALILineF(const T& line) { p0 = ALIPointF(line.p0), p1 = ALIPointF(line.p1); };
 };
+
+class ALIRange{
+public:
+    int min = 0, max = 0;
+    ALIRange();
+    ~ALIRange();
+};
+
+class ALIRangeF{
+public:
+    float min = 0, max = 0;
+    ALIRangeF();
+    ~ALIRangeF();
+};
+
+
 
 // calculate length of a line
 template<typename T>
