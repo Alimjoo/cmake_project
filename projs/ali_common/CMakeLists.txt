@@ -4,7 +4,9 @@ file(GLOB ALL_FILES "headers/*.h" "sources/*.cpp")
 
 # Find OpenCV
 if(WIN32)
-    set(OpenCV_DIR "C:/Users/PI/Documents/opencv/build/x64/vc16/lib")
+    # set(OpenCV_DIR "C:/Users/PI/Documents/opencv/build/x64/vc16/lib")
+    set(OpenCV_DIR "C:/Users/PI/Documents/opencv/build/")
+    # set(OpenCV_DIR "C:/Users/PI/Documents/opencv/sources/build/")
 endif()
 find_package(OpenCV REQUIRED)
 
@@ -16,7 +18,7 @@ target_include_directories(${Proj_Name} PUBLIC
 )
 
 target_link_libraries(${Proj_Name} PUBLIC 
-${OpenCV_LIBS}
+    ${OpenCV_LIBS}
 )
 
 

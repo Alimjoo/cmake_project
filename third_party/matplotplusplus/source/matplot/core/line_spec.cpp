@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by Alan Freitas on 2020-07-06.
 //
 

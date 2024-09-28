@@ -4,7 +4,7 @@
 namespace DEMURA_TEST {
     void Simple_Test() {
 #ifdef _WIN32
-        string path = "C:/Users/PI/Desktop/project_cmake/assets/";
+        string path = "C:/Users/PI/Desktop/cmake_project/assets/";
 #else
         string path = "/home/pi/Desktop/CMake/project_cmake/assets/";
 #endif
@@ -19,6 +19,8 @@ namespace DEMURA_TEST {
         para.store_path = path;
 
         begin_demura(image.ptr(), rows, cols, para);
+        
+        return;
     }
 
 }
