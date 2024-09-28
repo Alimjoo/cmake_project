@@ -2,7 +2,7 @@
 #include "demura.h"
 
 namespace DEMURA_TEST {
-    void Simaple_Test() {
+    void Simple_Test() {
 #ifdef _WIN32
         string path = "C:/Users/PI/Desktop/project_cmake/assets/";
 #else

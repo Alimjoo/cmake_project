@@ -14,7 +14,7 @@ float ALIPoint::norm() {
 ALIPointF::ALIPointF() { x = 0; y = 0; }
 ALIPointF::~ALIPointF() {}
 ALIPoint ALIPointF::round() {
-    return ALIPoint(int(std::round(this->x)), int(std::round(this->y)));
+    return ALIPoint(this->x, this->y);
 }
 float ALIPointF::norm() {
     return float(sqrt(x * x + y * y));
@@ -46,11 +46,13 @@ ALIPointF ALILineF::get_normal_vec() {
 
 
 // range
-ALIRange::ALIRange(){}
-ALIRange::~ALIRange(){}
+ALIRange::ALIRange() {}
+ALIRange::~ALIRange() {}
+int ALIRange::len() { return max - min; }
 
-ALIRangeF::ALIRangeF(){}
-ALIRangeF::~ALIRangeF(){}
+ALIRangeF::ALIRangeF() {}
+ALIRangeF::~ALIRangeF() {}
+float ALIRangeF::len() { return max - min; }
 
 
 

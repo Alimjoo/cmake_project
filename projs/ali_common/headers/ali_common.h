@@ -67,7 +67,7 @@ public:
     bool operator>=(const T& other)const { if (x >= other.x && y >= other.y) return true; else return false; }
     template<typename T>
     bool operator==(const T& p)const { if (x == int(std::round(p.x)) && y == int(std::round(p.y))) return true; else return false; }
-    operator cv::Point()  { return cv::Point(x, y) ;};
+    operator cv::Point() { return cv::Point(x, y); };
 };
 // float point
 class ALIPointF {
@@ -101,7 +101,7 @@ public:
     bool operator>(const T& other)const { if (x > other.x && y > other.y) return true; else return false; }
     template<typename T>
     bool operator>=(const T& other)const { if (x >= other.x && y >= other.y) return true; else return false; }
-    operator cv::Point2f()  { return cv::Point2f(x, y) ;};
+    operator cv::Point2f() { return cv::Point2f(x, y); };
 };
 // int line
 class ALILine {
@@ -142,18 +142,24 @@ public:
     // ALILineF(const T& line) { p0 = ALIPointF(line.p0), p1 = ALIPointF(line.p1); };
 };
 
-class ALIRange{
+class ALIRange {
 public:
     int min = 0, max = 0;
     ALIRange();
     ~ALIRange();
+    template <typename T>
+    ALIRange(T min_val, T max_val) { min = int(std::round(min_val)), max = int(std::round(max_val)); }
+    int len();
 };
 
-class ALIRangeF{
+class ALIRangeF {
 public:
     float min = 0, max = 0;
     ALIRangeF();
     ~ALIRangeF();
+    template <typename T>
+    ALIRangeF(T min_val, T max_val) { min = min_val, max = max_val; }
+    float len();
 };
 
 
@@ -387,6 +393,63 @@ void ali_draw_countor(Mat& img, vector<T>& points, int color) {
         cv::Point a = cv::Point(round(points[i].x), round(points[i].y));
         cv::Point b = cv::Point(round(points[(i + 1) % 4].x), round(points[(i + 1) % 4].y));
         cv::line(img, a, b, color);
+    }
+}
+
+// for the border, I expand it to 0
+template<typename T, typename S>
+void ali_mid_filter(const T* data, S* res, const int rows, const int cols, const int win_size) {
+    if (win_size % 2 == 0) {
+        cout << "win_size must be odd" << endl;
+        return;
+    }
+    int half_win = win_size / 2;
+    int sqwin = win_size * win_size;;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            T sum = 0;
+            for (int n = -half_win; n <= half_win; n++) {
+                for (int m = -half_win; m <= half_win; m++) {
+                    int x = n + i, y = m + j;
+                    T temp;
+                    if (
+                        x < 0 || x >= rows ||
+                        y < 0 || y >= cols
+                        ) temp = 0;
+                    else temp = *(data + x * cols + y);
+                    sum += temp;
+                }
+            }
+            *(res + i * cols + j) = sum * 1.0 / (sqwin);
+        }
+    }
+}
+
+// do diff on image or array, dir=1 is column wise, dir=2 is row wise
+template <typename T>
+void ali_diff(T* data, T* res, int rows, int cols, int dir) {
+    if (dir == 1) {
+        for (int i = 0; i < rows; i++) {
+            int index = i * cols;
+            for (int j = 0; j < cols - 1; j++) {
+                if (j == 0) res[index + j] = data[index + j];
+                else res[index + j] = data[index + j + 1] - data[index + j];
+            }
+        }
+    }
+    else if (dir == 2) {
+        for (int j = 0; j < cols; j++) {
+            for (int i = 0; i < rows - 1; i++) {
+                int index = i * cols;
+                int index_1 = (i + 1) * cols;
+                if (i == 0) res[index + j] = data[index + j];
+                else res[index + j] = data[index_1 + j] - data[index + j];
+            }
+        }
+    }
+    else {
+        cout << "dir must be 1 or 2" << endl;
+        return;
     }
 }
 
